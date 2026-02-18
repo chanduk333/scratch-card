@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Best Price Guru | Exclusive Rewards</title>
+    <title>Best Price Guru | 3D Scratch Card</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #FF6B00; /* BPG Orange */
-            --secondary: #008000; /* BPG Green */
-            --glass: rgba(255, 255, 255, 0.85);
-            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --primary: #FF6B00; /* Instamart Orange */
+            --secondary: #2E7D32; /* Deep Green */
+            --bg-color: #e0e5ec;
+            --card-bg: #f0f0f3;
+            --shadow-light: #ffffff;
+            --shadow-dark: #aeaec0;
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: radial-gradient(circle at top left, #a8e063, #56ab2f); /* Fresh Green Gradient */
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-color);
             height: 100vh;
             margin: 0;
             display: flex;
@@ -26,180 +27,221 @@
             perspective: 1000px; /* Essential for 3D */
         }
 
-        /* 3D Floating Container */
+        /* 3D Container */
         .scene {
-            width: 360px;
+            width: 340px;
             height: 600px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transform-style: preserve-3d;
         }
 
         .card-3d {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 30px;
-            padding: 2rem;
             width: 100%;
-            box-shadow: var(--shadow);
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 25px;
+            position: relative;
+            transform-style: preserve-3d; /* Makes children 3D */
+            box-shadow: 20px 20px 60px var(--shadow-dark), 
+                       -20px -20px 60px var(--shadow-light);
             transition: transform 0.1s ease-out;
-            position: relative;
-            transform-style: preserve-3d;
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
-        /* Moving Sheen Effect */
-        .card-3d::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transform: skewX(-25deg);
-            animation: shine 6s infinite;
-            pointer-events: none;
+        /* 3D Floating Elements */
+        .float-element {
+            transform: translateZ(30px); /* Pushes element 'out' of the card */
+            text-align: center;
         }
-        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
 
-        h2 { color: var(--secondary); margin: 0; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
-        .badge { background: var(--primary); color: white; padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: bold; text-transform: uppercase; display: inline-block; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3); }
+        h2 {
+            color: var(--primary);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 5px;
+        }
 
-        /* Form Styling */
+        .sub-text {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 12px;
+            background: rgba(46, 125, 50, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        /* Neumorphic Inputs (Inset 3D look) */
         input {
-            width: 100%; padding: 15px; margin: 8px 0;
-            border: none; background: rgba(255, 255, 255, 0.6);
-            border-radius: 12px; font-family: inherit; font-weight: 600; color: #333;
-            box-sizing: border-box; transition: 0.3s;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 15px;
+            background: var(--card-bg);
+            box-shadow: inset 5px 5px 10px var(--shadow-dark), 
+                        inset -5px -5px 10px var(--shadow-light);
+            font-size: 16px;
+            color: #555;
+            box-sizing: border-box;
+            transition: 0.3s;
         }
-        input:focus { background: white; box-shadow: 0 0 0 3px rgba(0, 128, 0, 0.2); outline: none; }
+        input:focus { outline: none; box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light); }
 
-        .btn-main {
-            width: 100%; padding: 16px; margin-top: 15px;
-            background: linear-gradient(135deg, var(--secondary), #006400);
-            color: white; border: none; border-radius: 15px;
-            font-size: 16px; font-weight: 800; letter-spacing: 1px;
-            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 10px 20px rgba(0, 128, 0, 0.3);
+        /* 3D Button */
+        .btn-3d {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(145deg, #ff721a, #e66000);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 5px 5px 15px rgba(255, 107, 0, 0.4), 
+                       -5px -5px 15px var(--shadow-light);
+            cursor: pointer;
+            transition: 0.2s;
+            transform: translateZ(40px); /* Stick out more */
         }
-        .btn-main:active { transform: scale(0.96); }
-        .btn-main:disabled { background: #ccc; cursor: wait; box-shadow: none; }
+        .btn-3d:active {
+            transform: translateZ(35px) scale(0.98); /* Press effect */
+            box-shadow: inset 3px 3px 8px rgba(0,0,0,0.2);
+        }
 
-        /* Scratch Game UI */
-        #gameArea { display: none; margin-top: 20px; }
-        .scratch-pad {
+        /* Scratch Area Frame */
+        #gameArea { display: none; margin-top: 20px; transform: translateZ(20px); }
+        
+        .scratch-frame {
             position: relative;
-            width: 300px; height: 160px;
+            width: 300px;
+            height: 160px;
             margin: 0 auto;
             border-radius: 15px;
-            overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
-            border: 4px solid white;
+            background: #fff;
+            padding: 5px;
+            box-shadow: inset 3px 3px 8px rgba(0,0,0,0.1), 
+                        5px 5px 15px rgba(0,0,0,0.1);
         }
 
         #prizeUnder {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: repeating-linear-gradient(45deg, #fff, #fff 10px, #f0f0f0 10px, #f0f0f0 20px);
-            color: var(--primary); font-size: 28px; font-weight: 900;
+            background: repeating-linear-gradient(
+                45deg,
+                #fff,
+                #fff 10px,
+                #f8f8f8 10px,
+                #f8f8f8 20px
+            );
+            color: var(--secondary);
+            font-size: 24px;
+            font-weight: 900;
+            border-radius: 10px;
         }
-        
-        canvas { position: relative; z-index: 10; cursor: grab; }
-        canvas:active { cursor: grabbing; }
+
+        canvas { border-radius: 10px; cursor: pointer; }
 
         /* Result Screen */
-        #resultArea { display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        #resultArea { display: none; transform: translateZ(50px); animation: popUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        @keyframes popUp { 0% { transform: scale(0.5) translateZ(0); opacity: 0; } 100% { transform: scale(1) translateZ(50px); opacity: 1; } }
 
-        .coupon-box {
-            background: white; border: 2px dashed var(--primary);
-            padding: 15px; border-radius: 12px; margin: 20px 0;
-            font-size: 24px; font-weight: 900; color: #333;
+        .prize-display {
+            font-size: 32px;
+            color: var(--primary);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            font-weight: 900;
         }
-
-        .loader { width: 20px; height: 20px; border: 3px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .error-msg { color: #d32f2f; font-size: 12px; margin-top: 10px; background: rgba(255,200,200,0.5); padding: 5px; border-radius: 5px; display: none; }
+        
+        .error-msg { color: red; font-size: 12px; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
 
-<audio id="scratchSound" src="scratch.mp3" loop></audio>
-<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-
 <div class="scene">
     <div class="card-3d" id="tiltCard">
         
-        <span class="badge">Officially Verified</span>
-        <h2>Best Price Guru</h2>
-        <p style="color: #555; font-size: 12px; margin-top: 5px;">Instamart • Vinukonda</p>
+        <div class="float-element">
+            <h2>Best Price Guru</h2>
+            <div class="sub-text">VINUKONDA • INSTAMART</div>
+        </div>
 
-        <div id="loginForm">
-            <input type="text" id="name" placeholder="Full Name" autocomplete="off">
-            <input type="tel" id="whatsapp" placeholder="WhatsApp (e.g., 9876543210)" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" id="city" placeholder="City" autocomplete="off">
+        <div id="loginForm" class="float-element">
+            <input type="text" id="name" placeholder="👤 Full Name">
+            <input type="tel" id="whatsapp" placeholder="📱 WhatsApp Number">
+            <input type="text" id="city" placeholder="📍 City / Area">
             
-            <button class="btn-main" onclick="verifyUser()" id="playBtn">
-                <span id="btnText">UNLOCK REWARD 🔓</span>
-            </button>
+            <button class="btn-3d" onclick="verifyUser()" id="playBtn">SCRATCH NOW 🎲</button>
             <div id="error" class="error-msg"></div>
-            <p style="font-size: 10px; margin-top: 15px; color: #777;">Limited to first 1000 users. One attempt only.</p>
+            <p style="font-size: 10px; margin-top: 15px; color: #888;">Limited: 1000 Coupons Only</p>
         </div>
 
         <div id="gameArea">
-            <h3 style="color: #333; margin-bottom: 10px;">Scratch the Gold! ✨</h3>
-            <div class="scratch-pad">
+            <div class="scratch-frame">
                 <div id="prizeUnder">
                     <span style="font-size: 40px;">🎁</span>
-                    <span id="prizeCode">...</span>
+                    <span id="prizeCode">???</span>
                 </div>
-                <canvas id="scratchCanvas" width="300" height="160"></canvas>
+                <canvas id="scratchCanvas" width="290" height="150" style="position: absolute; top: 5px; left: 5px;"></canvas>
             </div>
-            <p style="font-size: 11px; color: #666; margin-top: 10px;">🔊 Sound On | 📳 Haptic On</p>
+            <p style="font-size: 11px; color: #777; margin-top: 10px; text-align: center;">Move finger to scratch!</p>
         </div>
 
-        <div id="resultArea">
-            <h1 style="color: var(--secondary); font-size: 2rem; margin-bottom: 0;">JACKPOT!</h1>
-            <p style="font-size: 12px; color: #555;">You've unlocked a special deal</p>
+        <div id="resultArea" class="float-element">
+            <h1 style="color: var(--secondary); margin: 0;">YOU WON!</h1>
+            <div class="prize-display" id="finalDisplay"></div>
             
-            <div class="coupon-box" id="finalCodeDisplay"></div>
-            
-            <div style="text-align: left; font-size: 11px; color: #555; background: rgba(255,255,255,0.6); padding: 10px; border-radius: 8px;">
-                <b>✅ Conditions:</b><br>
-                1. Valid on bills above ₹1000<br>
-                2. Excludes Oil, Ghee, Rice & Atta<br>
-                3. Show this screen at billing counter
+            <div style="background: rgba(255,255,255,0.6); padding: 10px; border-radius: 10px; font-size: 11px; color: #555; text-align: left; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);">
+                <b>📝 Terms & Conditions:</b><br>
+                • Min Purchase ₹1000<br>
+                • Not valid on Oil/Rice/Ghee<br>
+                • Show screenshot at counter
             </div>
             
-            <button class="btn-main" onclick="window.location.reload()">Done</button>
+            <button class="btn-3d" onclick="location.reload()" style="background: linear-gradient(145deg, #2E7D32, #1B5E20);">Done</button>
         </div>
 
     </div>
 </div>
 
-<script>
-    // 🔴 IMPORTANT: PASTE YOUR GOOGLE APPS SCRIPT URL HERE
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyY9CaZjuaa03QIxIuIpomCqI1_YEYtqyZH7nyb6_sfQ28-YTjwSB3B9JpEcBNJquHjGw/exec';
+<audio id="scratchSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" loop></audio>
 
-    // 3D TILT PHYSICS
+<script>
+    // 🔴 PASTE YOUR GOOGLE APPS SCRIPT URL HERE
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzEHSUm4bfuPNYSB8sHEk6xWgRqPpGm4H9plvtwgt4HFqPcKAW6tQnCYOjoM0xH6_9KEg/exec';
+
+    // --- 3D TILT EFFECT LOGIC ---
     const card = document.getElementById('tiltCard');
     const scene = document.querySelector('.scene');
 
+    // Mouse Movement
     scene.addEventListener('mousemove', (e) => {
-        const xAxis = (window.innerWidth / 2 - e.pageX) / 20;
-        const yAxis = (window.innerHeight / 2 - e.pageY) / 20;
+        const xAxis = (window.innerWidth / 2 - e.pageX) / 15; // Rotate X axis
+        const yAxis = (window.innerHeight / 2 - e.pageY) / 15; // Rotate Y axis
         card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
     });
 
-    // Reset tilt when mouse leaves
+    // Reset on Leave
     scene.addEventListener('mouseleave', () => {
         card.style.transform = `rotateY(0deg) rotateX(0deg)`;
     });
 
+    // Mobile Gyroscope (Optional - works on supported phones)
+    window.addEventListener('deviceorientation', (e) => {
+        if (window.innerWidth < 800) { // Only on mobile
+            const y = (e.gamma) / 2; // Left/Right tilt
+            const x = (e.beta - 45) / 2; // Forward/Back tilt
+            card.style.transform = `rotateY(${y}deg) rotateX(${x}deg)`;
+        }
+    });
+
+    // --- GAME LOGIC ---
     let winningPrize = "";
 
     function verifyUser() {
@@ -207,97 +249,71 @@
         const whatsapp = document.getElementById('whatsapp').value;
         const city = document.getElementById('city').value;
         const btn = document.getElementById('playBtn');
-        const btnText = document.getElementById('btnText');
-        const errorDiv = document.getElementById('error');
+        const err = document.getElementById('error');
 
-        if (!name || !whatsapp || !city) {
-            showError("Please fill in all details correctly.");
-            return;
+        if(!name || !whatsapp || !city) {
+            err.innerText = "Please fill all fields!"; err.style.display = 'block'; return;
         }
 
-        // UI Loading State
+        btn.innerText = "VERIFYING... ⏳";
         btn.disabled = true;
-        errorDiv.style.display = 'none';
-        btnText.innerHTML = '<span class="loader"></span> VERIFYING...';
 
-        // CALL GOOGLE SHEET
         fetch(scriptURL, {
             method: 'POST',
             body: JSON.stringify({ name, whatsapp, city })
         })
         .then(res => res.json())
         .then(data => {
-            if (data.status === 'error') {
-                showError(data.message);
+            if(data.status === 'error') {
+                err.innerText = data.message;
+                err.style.display = 'block';
+                btn.innerText = "TRY AGAIN ❌";
                 btn.disabled = false;
-                btnText.innerText = "TRY AGAIN 🔓";
             } else {
-                // Success
                 winningPrize = data.prize;
                 document.getElementById('prizeCode').innerText = winningPrize;
-                document.getElementById('finalCodeDisplay').innerText = winningPrize;
+                document.getElementById('finalDisplay').innerText = winningPrize;
                 
-                // Transition
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('gameArea').style.display = 'block';
                 initScratch();
             }
         })
-        .catch(err => {
-            showError("Connection failed. Please check internet.");
-            btn.disabled = false;
-            btnText.innerText = "UNLOCK REWARD 🔓";
+        .catch(e => {
+            err.innerText = "Connection Error"; err.style.display = 'block'; btn.disabled = false;
         });
     }
 
-    function showError(msg) {
-        const err = document.getElementById('error');
-        err.innerText = msg;
-        err.style.display = 'block';
-    }
-
-    // PROFESSIONAL SCRATCH LOGIC
     function initScratch() {
         const canvas = document.getElementById('scratchCanvas');
         const ctx = canvas.getContext('2d');
         const sound = document.getElementById('scratchSound');
 
-        // Gold Foil Gradient
+        // 3D Metallic Gradient Layer
         let grd = ctx.createLinearGradient(0, 0, 300, 160);
-        grd.addColorStop(0, "#D4AF37");
-        grd.addColorStop(0.3, "#F7EF8A");
-        grd.addColorStop(0.6, "#D4AF37");
-        grd.addColorStop(1, "#C5A028");
+        grd.addColorStop(0, "#BDC3C7");
+        grd.addColorStop(0.5, "#2C3E50");
+        grd.addColorStop(1, "#BDC3C7");
         ctx.fillStyle = grd;
         ctx.fillRect(0, 0, 300, 160);
 
-        // Pattern Overlay
-        ctx.fillStyle = "rgba(255,255,255,0.2)";
-        for(let i=0; i<300; i+=10) {
-            ctx.fillRect(i, 0, 1, 160);
-            ctx.fillRect(0, i/2, 300, 1);
-        }
+        // Add 'Sparkle' dots
+        ctx.fillStyle = "#FFF";
+        for(let i=0; i<50; i++) ctx.fillRect(Math.random()*300, Math.random()*160, 2, 2);
 
-        // Text
-        ctx.font = "bold 22px Montserrat";
-        ctx.fillStyle = "#8a6e04";
-        ctx.textAlign = "center";
-        ctx.fillText("SCRATCH HERE", 150, 90);
+        // Text overlay
+        ctx.font = "bold 20px Segoe UI";
+        ctx.fillStyle = "#FFF";
+        ctx.fillText("SCRATCH HERE", 75, 80);
 
         let isDrawing = false;
         let points = 0;
 
-        const start = () => { 
-            isDrawing = true; 
-            sound.play().catch(e=>console.log("Audio needed interaction"));
-        };
-        const end = () => { 
-            isDrawing = false; 
-            sound.pause(); 
-        };
-
+        const start = () => { isDrawing = true; sound.play().catch(e=>{}); };
+        const end = () => { isDrawing = false; sound.pause(); };
+        
         const move = (e) => {
-            if (!isDrawing) return;
+            if(!isDrawing) return;
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
             const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
@@ -305,15 +321,12 @@
 
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
-            ctx.arc(x, y, 25, 0, Math.PI * 2);
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
             ctx.fill();
 
-            // 5D Haptics
-            if (navigator.vibrate) navigator.vibrate(20);
-
             points++;
-            if (points > 180) finishGame();
-        };
+            if(points > 150) finishGame();
+        }
 
         canvas.addEventListener('mousedown', start);
         canvas.addEventListener('touchstart', start);
@@ -323,43 +336,17 @@
         window.addEventListener('touchend', end);
     }
 
-    let finished = false;
+    let done = false;
     function finishGame() {
-        if (finished) return;
-        finished = true;
-        
+        if(done) return;
+        done = true;
         setTimeout(() => {
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('resultArea').style.display = 'block';
-            document.getElementById('winSound').play();
-            
-            // Professional Particle Burst
-            var end = Date.now() + 1000;
-            var colors = ['#FF6B00', '#008000', '#ffffff'];
-
-            (function frame() {
-                confetti({
-                    particleCount: 5,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: colors
-                });
-                confetti({
-                    particleCount: 5,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: colors
-                });
-
-                if (Date.now() < end) requestAnimationFrame(frame);
-            }());
-
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }, 500);
     }
 </script>
 
 </body>
 </html>
-
