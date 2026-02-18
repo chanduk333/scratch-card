@@ -10,12 +10,11 @@
     
     <style>
         :root {
-            /* Swiggy Orange Theme */
             --bg-gradient: linear-gradient(135deg, #FC8019 0%, #FF5200 100%);
             --primary: #FC8019;
+            --success: #2e7d32; /* Money Green */
             --card-white: #ffffff;
             --text-dark: #202124;
-            --gray-light: #f0f0f0;
         }
 
         body {
@@ -30,113 +29,106 @@
             color: var(--text-dark);
         }
 
-        /* Floating Food Icons Background */
+        /* Particles */
         .particle { position: absolute; font-size: 20px; opacity: 0.2; color: white; animation: floatUp 12s infinite linear; }
         .p1 { left: 10%; bottom: -30px; animation-delay: 0s; }
         .p2 { left: 30%; bottom: -30px; animation-delay: 4s; font-size: 25px; }
         .p3 { left: 70%; bottom: -30px; animation-delay: 2s; }
         .p4 { left: 90%; bottom: -30px; animation-delay: 6s; font-size: 30px; }
-        
-        @keyframes floatUp { 
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; } 
-            20% { opacity: 0.3; }
-            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } 
-        }
+        @keyframes floatUp { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 0.3; } 100% { transform: translateY(-110vh); opacity: 0; } }
 
         /* Main Card */
         .container {
             width: 350px;
             background: rgba(255, 255, 255, 0.98);
             border-radius: 24px;
-            padding: 35px 25px;
+            padding: 30px 25px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.25);
             text-align: center;
             position: relative;
             z-index: 10;
             max-height: 90vh;
-            overflow-y: auto; /* Allow scrolling for long terms */
+            overflow-y: auto;
         }
 
         /* Header */
-        .brand-header { margin-bottom: 25px; }
+        .brand-header { margin-bottom: 20px; }
         .logo-circle {
-            width: 75px; height: 75px;
-            background: #fff;
-            border: 4px solid var(--primary);
-            border-radius: 50%;
+            width: 70px; height: 70px;
+            background: #fff; border: 4px solid var(--primary); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 15px auto;
-            box-shadow: 0 10px 20px rgba(252, 128, 25, 0.2);
-            font-size: 35px; color: var(--primary);
+            margin: 0 auto 10px auto;
+            font-size: 32px; color: var(--primary);
+            box-shadow: 0 5px 15px rgba(252, 128, 25, 0.2);
         }
-        h2 { margin: 0; font-weight: 800; font-size: 20px; text-transform: uppercase; line-height: 1.3; }
-        .badge { 
-            background: #FFF0E0; color: #FC8019; 
-            font-size: 11px; padding: 5px 15px; border-radius: 20px; 
-            font-weight: 700; display: inline-block; margin-top: 8px; letter-spacing: 1px;
-        }
+        h2 { margin: 0; font-weight: 800; font-size: 20px; text-transform: uppercase; line-height: 1.2; }
+        .badge { background: #FFF0E0; color: #FC8019; font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 700; display: inline-block; margin-top: 5px; }
 
         /* Inputs */
-        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-group { text-align: left; margin-bottom: 12px; }
         label { font-size: 12px; color: #666; font-weight: 600; margin-left: 5px; }
         input {
-            width: 100%; padding: 15px; margin-top: 5px;
-            border: 2px solid #eee; border-radius: 15px;
+            width: 100%; padding: 14px; margin-top: 4px;
+            border: 2px solid #eee; border-radius: 12px;
             font-size: 15px; font-family: 'Poppins', sans-serif; font-weight: 600;
-            box-sizing: border-box; transition: 0.3s;
-            background: #FAFAFA;
+            box-sizing: border-box; transition: 0.3s; background: #FAFAFA;
         }
-        input:focus { border-color: var(--primary); background: #fff; outline: none; box-shadow: 0 0 0 4px rgba(252, 128, 25, 0.1); }
+        input:focus { border-color: var(--primary); background: #fff; outline: none; }
 
-        /* Button */
         .btn-orange {
-            width: 100%; padding: 18px;
+            width: 100%; padding: 16px;
             background: linear-gradient(135deg, #FC8019, #FF5200);
-            color: white; border: none; border-radius: 15px;
-            font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            color: white; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 700; text-transform: uppercase;
             cursor: pointer; margin-top: 15px;
             box-shadow: 0 8px 20px rgba(252, 128, 25, 0.3);
-            transition: transform 0.2s;
+            transition: transform 0.1s;
         }
         .btn-orange:active { transform: scale(0.96); }
         .btn-orange:disabled { background: #ddd; color: #999; box-shadow: none; }
 
-        /* Scratch Area */
+        /* Game Area */
         #gameArea { display: none; animation: slideUp 0.5s; }
         .scratch-card-wrapper {
-            position: relative;
-            width: 280px; height: 180px;
-            margin: 20px auto;
-            border-radius: 16px; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 4px solid var(--primary);
+            position: relative; width: 280px; height: 180px;
+            margin: 20px auto; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 4px solid var(--primary);
         }
         #prizeLayer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 1;
+            background: #fff; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1;
         }
-        .prize-emoji { font-size: 45px; margin-bottom: 5px; animation: bounce 2s infinite; }
+        .prize-emoji { font-size: 40px; margin-bottom: 5px; animation: bounce 2s infinite; }
         .prize-text { font-size: 24px; font-weight: 800; color: var(--primary); }
-
         canvas { position: relative; z-index: 2; cursor: crosshair; }
 
         /* Result Area */
         #resultArea { display: none; animation: popIn 0.5s; }
+        
         .coupon-display {
             background: #222; color: #fff;
-            padding: 15px; border-radius: 10px; margin: 15px 0;
-            font-family: monospace; font-size: 22px; letter-spacing: 2px;
+            padding: 15px; border-radius: 10px; margin: 15px 0 5px 0;
+            font-family: monospace; font-size: 24px; letter-spacing: 2px;
             border: 2px dashed #666;
         }
-        .terms { font-size: 11px; color: #555; background: #FFF0E0; padding: 15px; border-radius: 12px; text-align: left; line-height: 1.6; border: 1px solid #FFDbb5; }
+
+        /* NEW: The Discount Highlight Box */
+        .discount-highlight {
+            background: #e8f5e9; color: var(--success);
+            padding: 10px; border-radius: 8px; margin-bottom: 15px;
+            font-size: 14px; font-weight: 800; text-transform: uppercase;
+            border: 1px solid #c8e6c9;
+            animation: pulse 2s infinite;
+        }
+
+        .terms { font-size: 11px; color: #555; background: #FFF0E0; padding: 12px; border-radius: 10px; text-align: left; line-height: 1.6; border: 1px solid #FFDbb5; }
         .error-msg { color: #d32f2f; font-size: 12px; margin-top: 10px; display: none; background: #ffebee; padding: 8px; border-radius: 8px; }
 
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
     </style>
 </head>
@@ -157,8 +149,8 @@
 
     <div id="loginForm">
         <div class="input-group">
-            <label>Full Name</label>
-            <input type="text" id="name" placeholder="Enter Name">
+            <label>Name</label>
+            <input type="text" id="name" placeholder="Enter Full Name">
         </div>
         <div class="input-group">
             <label>WhatsApp Number</label>
@@ -171,7 +163,7 @@
 
         <button class="btn-orange" onclick="verifyUser()" id="playBtn">GET LUCKY CARD 🎲</button>
         <div id="error" class="error-msg"></div>
-        <p style="font-size:10px; color:#fff; margin-top:20px; opacity: 0.8;">Limited to 1000 Coupons Only</p>
+        <p style="font-size:10px; color:#fff; margin-top:15px; opacity: 0.9;">Limited to 1000 Coupons Only</p>
     </div>
 
     <div id="gameArea">
@@ -189,19 +181,20 @@
 
     <div id="resultArea">
         <i class="fas fa-check-circle" style="font-size:50px; color:#4CAF50; margin-bottom:10px;"></i>
-        <h2 style="color:#FC8019;">Congratulations!</h2>
-        <p style="font-size:13px; color:#555;">You've won an exclusive deal:</p>
+        <h2 style="color:#FC8019; margin-bottom:5px;">Congratulations!</h2>
         
         <div class="coupon-display" id="finalCode"></div>
         
+        <div class="discount-highlight" id="prizeDesc"></div>
+        
         <div class="terms">
-            <b>Coupon Terms & Conditions:</b><br>
-            • Minimum purchase of ₹1000 is required.<br>
+            <b>Terms & Conditions:</b><br>
+            • Min purchase ₹1000 required.<br>
             • Valid for one-time use only.<br>
-            • Not applicable on Oil, Rice, Ghee, and Atta.<br>
-            • Valid for 30 days from the date of issue.<br>
-            • Applicable on offline store purchases only.<br><br>
-            <b>Note:</b> The coupon will be sent automatically. Please show the coupon at the billing counter during checkout.
+            • Not applicable on Oil, Rice, Ghee, Atta.<br>
+            • Valid for 30 days from issue.<br>
+            • Offline store purchases only.<br><br>
+            <b>Note:</b> Please show this coupon at the billing counter.
         </div>
         
         <button class="btn-orange" onclick="location.reload()" style="background:#333; margin-top:15px;">CLOSE</button>
@@ -246,9 +239,20 @@
                 btn.disabled = false;
             } else {
                 winningPrize = data.prize;
+                
+                // --- UPDATE PRIZE TEXT & DESCRIPTION ---
                 document.getElementById('hiddenPrize').innerText = winningPrize;
                 document.getElementById('finalCode').innerText = winningPrize;
                 
+                // Logic to set the Description Text
+                let descText = "💰 INSTANT DISCOUNT APPLIED";
+                if(winningPrize.includes("10%")) descText = "💰 INSTANT 10% CASH DISCOUNT";
+                else if(winningPrize.includes("8%")) descText = "💰 INSTANT 8% CASH DISCOUNT";
+                else if(winningPrize.includes("6%")) descText = "💰 INSTANT 6% CASH DISCOUNT";
+                
+                document.getElementById('prizeDesc').innerText = descText;
+                // ---------------------------------------
+
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('gameArea').style.display = 'block';
                 initScratch();
@@ -267,42 +271,31 @@
         const ctx = canvas.getContext('2d');
         const sound = document.getElementById('scratchSound');
 
-        // Create "Silver Foil" Gradient
         let grd = ctx.createLinearGradient(0, 0, 280, 180);
-        grd.addColorStop(0, "#D3D3D3");
-        grd.addColorStop(0.5, "#F5F5F5");
-        grd.addColorStop(1, "#C0C0C0");
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, 280, 180);
+        grd.addColorStop(0, "#D3D3D3"); grd.addColorStop(0.5, "#F5F5F5"); grd.addColorStop(1, "#C0C0C0");
+        ctx.fillStyle = grd; ctx.fillRect(0, 0, 280, 180);
 
-        // Add Orange Pattern to Foil
-        ctx.fillStyle = "rgba(252, 128, 25, 0.1)"; // Transparent Orange
+        ctx.fillStyle = "rgba(252, 128, 25, 0.1)";
         for(let i=0; i<280; i+=20) {
             for(let j=0; j<180; j+=20) {
                 if((i+j)%40 == 0) ctx.beginPath(), ctx.arc(i, j, 5, 0, Math.PI*2), ctx.fill();
             }
         }
 
-        // Text
-        ctx.fillStyle = "#666";
-        ctx.font = "bold 20px Poppins";
-        ctx.textAlign = "center";
-        ctx.fillText("SCRATCH HERE", 140, 95);
+        ctx.fillStyle = "#666"; ctx.font = "bold 20px Poppins";
+        ctx.textAlign = "center"; ctx.fillText("SCRATCH HERE", 140, 95);
 
         let isDrawing = false, points = 0;
         const start = () => { isDrawing = true; sound.play().catch(()=>{}); };
         const end = () => { isDrawing = false; sound.pause(); };
-        
         const move = (e) => {
             if(!isDrawing) return;
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
             let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
             let y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI*2); ctx.fill();
-            
             if(navigator.vibrate) navigator.vibrate(5);
             points++;
             if(points > 100) finishGame();
@@ -321,11 +314,7 @@
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('resultArea').style.display = 'block';
             document.getElementById('winSound').play();
-            confetti({
-                particleCount: 150,
-                spread: 90,
-                colors: ['#FC8019', '#ffffff', '#000000'] // Orange, White, Black confetti
-            });
+            confetti({ particleCount: 150, spread: 90, colors: ['#FC8019', '#ffffff', '#000000'] });
         }, 600);
     }
 </script>
