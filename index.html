@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Scratch & Win</title>
+    <style>
+        :root { --primary: #25d366; --dark: #128c7e; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 100%; max-width: 350px; text-align: center; }
+        h2 { color: #333; margin-top: 0; }
+        p { color: #666; font-size: 0.9rem; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 10px; box-sizing: border-box; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+        button:hover { background: var(--dark); transform: translateY(-2px); }
+        
+        #gameContainer { display: none; margin-top: 20px; position: relative; }
+        #prizeResult { position: absolute; width: 100%; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; color: #d32f2f; background: #fffdf0; border: 3px dashed #ffd700; border-radius: 15px; box-sizing: border-box; }
+        canvas { position: relative; z-index: 10; cursor: crosshair; border-radius: 15px; touch-action: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        .loading { font-size: 12px; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div id="formSection">
+        <h2>Unlock Your Gift! 🎁</h2>
+        <p>Enter your details to get a scratch card</p>
+        <input type="text" id="userName" placeholder="Your Name" required>
+        <input type="tel" id="userWhatsapp" placeholder="WhatsApp Number" required>
+        <input type="text" id="userCity" placeholder="Your City" required>
+        <button onclick="submitData()">Get Scratch Card</button>
+        <p class="loading">By playing, you agree to receive updates via WhatsApp.</p>
+    </div>
+
+    <div id="gameContainer">
+        <h2>Scratch the Silver!</h2>
+        <div id="prizeResult">
+            <span id="prizeText"></span>
+            <small style="font-size: 10px; color: #999; margin-top: 5px;">COUPON UNLOCKED</small>
+        </div>
+        <canvas id="scratchCanvas" width="300" height="150"></canvas>
+        <p>Use your finger or mouse to reveal your prize!</p>
+    </div>
+
+    <div id="thankYou" class="hidden">
+        <h2 style="color: var(--primary);">Success! 🎉</h2>
+        <p>Your prize has been recorded in our system.</p>
+        <div id="finalPrizeDisplay" style="font-size: 20px; font-weight: bold; padding: 15px; background: #f9f9f9; border-radius: 10px; margin-bottom: 20px;"></div>
+        <button onclick="location.reload()">Back to Home</button>
+    </div>
+</div>
+
+<script>
+    // YOUR PROVIDED GOOGLE APPS SCRIPT URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxM9EazpEQIffjfkRtziI7d7bQt1NBhxX9sNXQSKQ8TxmpAauZjvPqe8HVyNKOHuzDvQw/exec';
+
+    // WINNING LOGIC (Weighted Probabilities)
+    function getWeightedPrize() {
+        const random = Math.random() * 100;
+        if (random < 10) return "FREE COFFEE ☕";     // 10% Chance
+        if (random < 40) return "20% DISCOUNT 🏷️";    // 30% Chance
+        return "10% DISCOUNT 💸";                   // 60% Chance
+    }
+
+    function submitData() {
+        const name = document.getElementById('userName').value;
+        const whatsapp = document.getElementById('userWhatsapp').value;
+        const city = document.getElementById('userCity').value;
+
+        if(!name || !whatsapp || !city) {
+            alert("All fields are required!");
+            return;
+        }
+
+        const prize = getWeightedPrize();
+        document.getElementById('prizeText').innerText = prize;
+        document.getElementById('finalPrizeDisplay').innerText = prize;
+
+        // Save to Google Sheets
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, whatsapp, city, prize })
+        });
+
+        // Show Scratch Card
+        document.getElementById('formSection').classList.add('hidden');
+        document.getElementById('gameContainer').style.display = 'block';
+        initScratch();
+    }
+
+    function initScratch() {
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let pointsScratched = 0;
+
+        // Draw Silver Layer
+        ctx.fillStyle = '#C0C0C0';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Add "Sparkle" effect
+        for(let i=0; i<200; i++) {
+            ctx.fillStyle = Math.random() > 0.5 ? '#D3D3D3' : '#A9A9A9';
+            ctx.fillRect(Math.random()*300, Math.random()*150, 1.5, 1.5);
+        }
+
+        const scratch = (x, y) => {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+            pointsScratched++;
+            
+            // If scratched enough (approx 30% of card)
+            if(pointsScratched > 150) {
+                setTimeout(() => {
+                    document.getElementById('gameContainer').classList.add('hidden');
+                    document.getElementById('thankYou').classList.remove('hidden');
+                }, 1500);
+            }
+        };
+
+        // Event Listeners
+        const getPos = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return [clientX - rect.left, clientY - rect.top];
+        };
+
+        const handleStart = (e) => { isDrawing = true; };
+        const handleMove = (e) => {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const [x, y] = getPos(e);
+            scratch(x, y);
+        };
+        const handleEnd = () => { isDrawing = false; };
+
+        canvas.addEventListener('mousedown', handleStart);
+        canvas.addEventListener('touchstart', handleStart);
+        window.addEventListener('mousemove', handleMove);
+        canvas.addEventListener('touchmove', handleMove);
+        window.addEventListener('mouseup', handleEnd);
+        window.addEventListener('touchend', handleEnd);
+    }
+</script>
+
+</body>
+</html>
