@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Best Price Guru | Instamart Win</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --brand-orange: #FC8019; /* Swiggy Orange */
+            --brand-dark: #333333;
+            --brand-bg: #fff5e6;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--brand-bg);
+            /* Floating Background Pattern */
+            background-image: radial-gradient(#FC8019 0.5px, transparent 0.5px), radial-gradient(#FC8019 0.5px, var(--brand-bg) 0.5px);
+            background-size: 20px 20px;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* FLOATING ICONS ANIMATION */
+        .floating-icon {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            color: var(--brand-orange);
+            animation: float 6s ease-in-out infinite;
+            z-index: 0;
+        }
+        @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } 100% { transform: translateY(0px) rotate(0deg); } }
+
+        /* THE 3D CARD */
+        .scene { width: 340px; height: 620px; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        
+        .card-3d {
+            width: 100%;
+            background: white;
+            border-radius: 25px;
+            padding: 30px 20px;
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            border-top: 8px solid var(--brand-orange);
+            transition: transform 0.1s;
+        }
+
+        /* HEADER */
+        .header { transform: translateZ(30px); text-align: center; margin-bottom: 20px; }
+        .logo-box { 
+            background: var(--brand-orange); 
+            color: white; 
+            width: 60px; height: 60px; 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            margin: 0 auto 10px auto;
+            font-size: 30px;
+            box-shadow: 0 5px 15px rgba(252, 128, 25, 0.4);
+        }
+        h2 { color: var(--brand-dark); margin: 0; font-weight: 800; font-size: 1.4rem; text-transform: uppercase; }
+        .sub-badge { background: #ffeebb; color: #d66400; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-top: 5px; }
+
+        /* INPUTS */
+        .input-group { transform: translateZ(40px); }
+        input {
+            width: 100%; padding: 14px; margin: 8px 0;
+            border: 2px solid #eee; border-radius: 12px;
+            font-size: 15px; outline: none; transition: 0.3s;
+            box-sizing: border-box; background: #fafafa;
+        }
+        input:focus { border-color: var(--brand-orange); background: white; box-shadow: 0 0 10px rgba(252, 128, 25, 0.1); }
+
+        /* BUTTON */
+        .btn-orange {
+            width: 100%; padding: 15px; margin-top: 15px;
+            background: linear-gradient(135deg, #FC8019 0%, #ff5500 100%);
+            color: white; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(252, 128, 25, 0.3);
+            transition: transform 0.2s;
+        }
+        .btn-orange:active { transform: scale(0.95); }
+        .btn-orange:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+
+        /* SCRATCH AREA */
+        #gameArea { display: none; transform: translateZ(50px); text-align: center; }
+        .scratch-box {
+            position: relative; width: 280px; height: 160px; margin: 0 auto;
+            border-radius: 15px; overflow: hidden;
+            border: 4px dashed var(--brand-orange);
+            background: white;
+        }
+        #prizeUnder {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 26px; font-weight: 900; color: var(--brand-orange);
+            background: repeating-linear-gradient(45deg, #fff, #fff 10px, #fff8f0 10px, #fff8f0 20px);
+        }
+
+        canvas { position: relative; z-index: 20; cursor: crosshair; }
+
+        /* WIN SCREEN */
+        #resultArea { display: none; transform: translateZ(60px); text-align: center; animation: popUp 0.5s ease; }
+        @keyframes popUp { from { transform: scale(0.8) translateZ(0); opacity: 0; } to { transform: scale(1) translateZ(60px); opacity: 1; } }
+
+        .coupon-code {
+            background: #333; color: #fff; 
+            padding: 15px; border-radius: 8px; 
+            font-family: monospace; font-size: 22px; letter-spacing: 2px;
+            margin: 15px 0; border: 2px dashed #555;
+        }
+        
+        .tac { font-size: 11px; color: #666; background: #eee; padding: 10px; border-radius: 8px; text-align: left; line-height: 1.5; }
+        .error-msg { color: #d32f2f; font-size: 12px; margin-top: 10px; display: none; background: #ffe6e6; padding: 5px; border-radius: 4px; }
+
+    </style>
+</head>
+<body>
+
+<i class="fas fa-carrot floating-icon" style="top: 10%; left: 10%;"></i>
+<i class="fas fa-apple-alt floating-icon" style="top: 20%; right: 15%; animation-delay: 1s;"></i>
+<i class="fas fa-shopping-cart floating-icon" style="bottom: 15%; left: 15%; animation-delay: 2s;"></i>
+<i class="fas fa-lemon floating-icon" style="bottom: 10%; right: 10%; animation-delay: 3s;"></i>
+
+<audio id="scratchSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" loop></audio>
+<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+
+<div class="scene">
+    <div class="card-3d" id="tiltCard">
+        
+        <div class="header">
+            <div class="logo-box"><i class="fas fa-store"></i></div>
+            <h2>Best Price Guru</h2>
+            <div class="sub-badge">INSTAMART • VINUKONDA</div>
+        </div>
+
+        <div id="loginForm" class="input-group">
+            <input type="text" id="name" placeholder="👤 Customer Name">
+            <input type="tel" id="whatsapp" placeholder="📱 WhatsApp (e.g., 9876543210)" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" id="city" placeholder="📍 City / Village">
+            
+            <button class="btn-orange" onclick="verifyUser()" id="playBtn">TRY YOUR LUCK 🎲</button>
+            <div id="error" class="error-msg"></div>
+            <p style="font-size: 11px; color: #888; margin-top: 15px; text-align: center;">By clicking, you agree to T&C. Limit 1000 Coupons.</p>
+        </div>
+
+        <div id="gameArea">
+            <h3 style="color: #444; margin-bottom: 10px;">Scratch & Win!</h3>
+            <div class="scratch-box">
+                <div id="prizeUnder">
+                    <span style="font-size: 40px; margin-bottom: 10px;">🎁</span>
+                    <span id="prizeCode">...</span>
+                </div>
+                <canvas id="scratchCanvas" width="280" height="160"></canvas>
+            </div>
+            <p style="font-size: 11px; color: #aaa; margin-top: 10px;">🔊 Turn Volume Up!</p>
+        </div>
+
+        <div id="resultArea">
+            <h1 style="color: var(--brand-orange); margin: 0;">CONGRATS! 🎉</h1>
+            <p style="font-size: 13px; color: #555;">You won an exclusive coupon:</p>
+            
+            <div class="coupon-code" id="finalDisplay"></div>
+            
+            <div class="tac">
+                <b>⚠️ Terms & Conditions:</b><br>
+                • Minimum Bill Value: ₹1000<br>
+                • Valid for One-Time Use Only<br>
+                • Not valid on: Oil, Ghee, Rice, Atta<br>
+                • Show screenshot at billing counter
+            </div>
+            
+            <button class="btn-orange" onclick="location.reload()">CLOSE</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // 🔴 IMPORTANT: REPLACE THIS URL WITH YOUR NEW DEPLOYMENT URL
+    const scriptURL = 'YOUR_NEW_GOOGLE_SCRIPT_URL_HERE';
+
+    // --- 3D TILT EFFECT ---
+    const card = document.getElementById('tiltCard');
+    const scene = document.querySelector('.scene');
+
+    scene.addEventListener('mousemove', (e) => {
+        const xAxis = (window.innerWidth / 2 - e.pageX) / 20; 
+        const yAxis = (window.innerHeight / 2 - e.pageY) / 20;
+        card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+    });
+    
+    scene.addEventListener('mouseleave', () => {
+        card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    });
+
+    // --- LOGIC ---
+    let winningPrize = "";
+
+    function verifyUser() {
+        const name = document.getElementById('name').value;
+        const whatsapp = document.getElementById('whatsapp').value;
+        const city = document.getElementById('city').value;
+        const btn = document.getElementById('playBtn');
+        const err = document.getElementById('error');
+
+        if(!name || !whatsapp || !city) {
+            err.innerText = "Please fill all fields!"; err.style.display = 'block'; return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CHECKING...';
+        err.style.display = 'none';
+
+        // NOTE: We use simple POST. Google Apps Script must return JSON.
+        fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify({ name, whatsapp, city })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'error') {
+                err.innerText = data.message;
+                err.style.display = 'block';
+                btn.innerHTML = 'TRY AGAIN';
+                btn.disabled = false;
+            } else {
+                winningPrize = data.prize;
+                document.getElementById('prizeCode').innerText = winningPrize;
+                document.getElementById('finalDisplay').innerText = winningPrize;
+                
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('gameArea').style.display = 'block';
+                initScratch();
+            }
+        })
+        .catch(e => {
+            // Fallback for redirect issues - usually means it actually worked but browser blocked the redirect response
+            console.log("Fetch error (might be redirect):", e);
+            err.innerText = "Network Error. Please check: 1. Is your Script deployed as 'Anyone'? 2. Did you use the New Version?"; 
+            err.style.display = 'block'; 
+            btn.disabled = false; 
+            btn.innerHTML = 'TRY AGAIN';
+        });
+    }
+
+    function initScratch() {
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        const sound = document.getElementById('scratchSound');
+
+        // Create Metallic Gradient for Scratch Surface
+        let grd = ctx.createLinearGradient(0, 0, 280, 160);
+        grd.addColorStop(0, "#C0C0C0");
+        grd.addColorStop(0.5, "#E0E0E0");
+        grd.addColorStop(1, "#A0A0A0");
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, 280, 160);
+
+        // Add "Swiggy" Orange Pattern on top
+        ctx.fillStyle = "rgba(252, 128, 25, 0.2)"; // Transparent Orange
+        for(let i=0; i<300; i+=20) {
+            ctx.beginPath();
+            ctx.arc(i, 80, 10, 0, 2*Math.PI);
+            ctx.fill();
+        }
+
+        // Text
+        ctx.font = "bold 20px Segoe UI";
+        ctx.fillStyle = "#555";
+        ctx.textAlign = "center";
+        ctx.fillText("SCRATCH HERE", 140, 85);
+
+        let isDrawing = false;
+        let points = 0;
+
+        const start = () => { isDrawing = true; sound.play().catch(()=>{}); };
+        const end = () => { isDrawing = false; sound.pause(); };
+        
+        const move = (e) => {
+            if(!isDrawing) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+
+            if(navigator.vibrate) navigator.vibrate(10); // Haptic
+
+            points++;
+            if(points > 120) finishGame();
+        }
+
+        canvas.addEventListener('mousedown', start);
+        canvas.addEventListener('touchstart', start);
+        window.addEventListener('mousemove', move);
+        canvas.addEventListener('touchmove', move);
+        window.addEventListener('mouseup', end);
+        window.addEventListener('touchend', end);
+    }
+
+    let done = false;
+    function finishGame() {
+        if(done) return;
+        done = true;
+        
+        setTimeout(() => {
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+            document.getElementById('winSound').play();
+            
+            // Orange & Green Confetti
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#FC8019', '#333333', '#ffffff'] 
+            });
+        }, 600);
+    }
+</script>
+
+</body>
+</html>
