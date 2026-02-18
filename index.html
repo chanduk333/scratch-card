@@ -11,23 +11,22 @@
         :root {
             --brand-orange: #FC8019; /* Swiggy Orange */
             --brand-dark: #333333;
-            --brand-bg: #fff5e6; /* Light Orange BG */
+            --brand-bg: #fff5e6;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--brand-bg);
             /* Floating Background Pattern */
             background-image: radial-gradient(#FC8019 0.5px, transparent 0.5px), radial-gradient(#FC8019 0.5px, var(--brand-bg) 0.5px);
             background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
             height: 100vh;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            perspective: 1000px; /* 3D Depth */
+            perspective: 1000px;
         }
 
         /* FLOATING ICONS ANIMATION */
@@ -51,7 +50,7 @@
             padding: 30px 20px;
             position: relative;
             transform-style: preserve-3d;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(252, 128, 25, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
             border-top: 8px solid var(--brand-orange);
             transition: transform 0.1s;
         }
@@ -189,8 +188,8 @@
 </div>
 
 <script>
-    // 🔴 PASTE YOUR GOOGLE APPS SCRIPT URL HERE
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzEHSUm4bfuPNYSB8sHEk6xWgRqPpGm4H9plvtwgt4HFqPcKAW6tQnCYOjoM0xH6_9KEg/exec';
+    // ✅ YOUR NEW URL IS INSERTED HERE AUTOMATICALLY:
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyAv_d9nTrxg1N5COi6O7Cew6Y-6AdjVcJBNx-HUWG-JVinWR0xjUaLcHjJQyqrnQ9zdw/exec';
 
     // --- 3D TILT EFFECT ---
     const card = document.getElementById('tiltCard');
@@ -224,6 +223,7 @@
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CHECKING...';
         err.style.display = 'none';
 
+        // NOTE: We use simple POST. Google Apps Script must return JSON.
         fetch(scriptURL, {
             method: 'POST',
             body: JSON.stringify({ name, whatsapp, city })
@@ -246,7 +246,12 @@
             }
         })
         .catch(e => {
-            err.innerText = "Network Error. Check connection."; err.style.display = 'block'; btn.disabled = false; btn.innerHTML = 'TRY AGAIN';
+            // Fallback for redirect issues - usually means it actually worked but browser blocked the redirect response
+            console.log("Fetch error (might be redirect):", e);
+            err.innerText = "Network Error. Please check: 1. Is your Script deployed as 'Anyone'? 2. Did you use the New Version?"; 
+            err.style.display = 'block'; 
+            btn.disabled = false; 
+            btn.innerHTML = 'TRY AGAIN';
         });
     }
 
@@ -332,4 +337,3 @@
 
 </body>
 </html>
-
