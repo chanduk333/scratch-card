@@ -3,227 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Best Price Guru | Instamart Win</title>
+    <title>Best Price Guru Instamart</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --brand-orange: #FC8019; /* Swiggy Orange */
-            --brand-dark: #333333;
-            --brand-bg: #fff5e6;
+            /* Swiggy Orange Theme */
+            --bg-gradient: linear-gradient(135deg, #FC8019 0%, #FF5200 100%);
+            --primary: #FC8019;
+            --card-white: #ffffff;
+            --text-dark: #202124;
+            --gray-light: #f0f0f0;
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--brand-bg);
-            /* Floating Background Pattern */
-            background-image: radial-gradient(#FC8019 0.5px, transparent 0.5px), radial-gradient(#FC8019 0.5px, var(--brand-bg) 0.5px);
-            background-size: 20px 20px;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
             height: 100vh;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            perspective: 1000px;
+            color: var(--text-dark);
         }
 
-        /* FLOATING ICONS ANIMATION */
-        .floating-icon {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0.1;
-            color: var(--brand-orange);
-            animation: float 6s ease-in-out infinite;
-            z-index: 0;
-        }
-        @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } 100% { transform: translateY(0px) rotate(0deg); } }
-
-        /* THE 3D CARD */
-        .scene { width: 340px; height: 620px; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        /* Floating Food Icons Background */
+        .particle { position: absolute; font-size: 20px; opacity: 0.2; color: white; animation: floatUp 12s infinite linear; }
+        .p1 { left: 10%; bottom: -30px; animation-delay: 0s; }
+        .p2 { left: 30%; bottom: -30px; animation-delay: 4s; font-size: 25px; }
+        .p3 { left: 70%; bottom: -30px; animation-delay: 2s; }
+        .p4 { left: 90%; bottom: -30px; animation-delay: 6s; font-size: 30px; }
         
-        .card-3d {
-            width: 100%;
-            background: white;
-            border-radius: 25px;
-            padding: 30px 20px;
+        @keyframes floatUp { 
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; } 
+            20% { opacity: 0.3; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } 
+        }
+
+        /* Main Card */
+        .container {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            padding: 35px 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            text-align: center;
             position: relative;
-            transform-style: preserve-3d;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            border-top: 8px solid var(--brand-orange);
-            transition: transform 0.1s;
+            z-index: 10;
+            max-height: 90vh;
+            overflow-y: auto; /* Allow scrolling for long terms */
         }
 
-        /* HEADER */
-        .header { transform: translateZ(30px); text-align: center; margin-bottom: 20px; }
-        .logo-box { 
-            background: var(--brand-orange); 
-            color: white; 
-            width: 60px; height: 60px; 
-            border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            margin: 0 auto 10px auto;
-            font-size: 30px;
-            box-shadow: 0 5px 15px rgba(252, 128, 25, 0.4);
+        /* Header */
+        .brand-header { margin-bottom: 25px; }
+        .logo-circle {
+            width: 75px; height: 75px;
+            background: #fff;
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 15px auto;
+            box-shadow: 0 10px 20px rgba(252, 128, 25, 0.2);
+            font-size: 35px; color: var(--primary);
         }
-        h2 { color: var(--brand-dark); margin: 0; font-weight: 800; font-size: 1.4rem; text-transform: uppercase; }
-        .sub-badge { background: #ffeebb; color: #d66400; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-top: 5px; }
+        h2 { margin: 0; font-weight: 800; font-size: 20px; text-transform: uppercase; line-height: 1.3; }
+        .badge { 
+            background: #FFF0E0; color: #FC8019; 
+            font-size: 11px; padding: 5px 15px; border-radius: 20px; 
+            font-weight: 700; display: inline-block; margin-top: 8px; letter-spacing: 1px;
+        }
 
-        /* INPUTS */
-        .input-group { transform: translateZ(40px); }
+        /* Inputs */
+        .input-group { text-align: left; margin-bottom: 15px; }
+        label { font-size: 12px; color: #666; font-weight: 600; margin-left: 5px; }
         input {
-            width: 100%; padding: 14px; margin: 8px 0;
-            border: 2px solid #eee; border-radius: 12px;
-            font-size: 15px; outline: none; transition: 0.3s;
-            box-sizing: border-box; background: #fafafa;
+            width: 100%; padding: 15px; margin-top: 5px;
+            border: 2px solid #eee; border-radius: 15px;
+            font-size: 15px; font-family: 'Poppins', sans-serif; font-weight: 600;
+            box-sizing: border-box; transition: 0.3s;
+            background: #FAFAFA;
         }
-        input:focus { border-color: var(--brand-orange); background: white; box-shadow: 0 0 10px rgba(252, 128, 25, 0.1); }
+        input:focus { border-color: var(--primary); background: #fff; outline: none; box-shadow: 0 0 0 4px rgba(252, 128, 25, 0.1); }
 
-        /* BUTTON */
+        /* Button */
         .btn-orange {
-            width: 100%; padding: 15px; margin-top: 15px;
-            background: linear-gradient(135deg, #FC8019 0%, #ff5500 100%);
-            color: white; border: none; border-radius: 12px;
-            font-size: 16px; font-weight: bold; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px;
+            width: 100%; padding: 18px;
+            background: linear-gradient(135deg, #FC8019, #FF5200);
+            color: white; border: none; border-radius: 15px;
+            font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            cursor: pointer; margin-top: 15px;
             box-shadow: 0 8px 20px rgba(252, 128, 25, 0.3);
             transition: transform 0.2s;
         }
-        .btn-orange:active { transform: scale(0.95); }
-        .btn-orange:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+        .btn-orange:active { transform: scale(0.96); }
+        .btn-orange:disabled { background: #ddd; color: #999; box-shadow: none; }
 
-        /* SCRATCH AREA */
-        #gameArea { display: none; transform: translateZ(50px); text-align: center; }
-        .scratch-box {
-            position: relative; width: 280px; height: 160px; margin: 0 auto;
-            border-radius: 15px; overflow: hidden;
-            border: 4px dashed var(--brand-orange);
-            background: white;
+        /* Scratch Area */
+        #gameArea { display: none; animation: slideUp 0.5s; }
+        .scratch-card-wrapper {
+            position: relative;
+            width: 280px; height: 180px;
+            margin: 20px auto;
+            border-radius: 16px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 4px solid var(--primary);
         }
-        #prizeUnder {
+        #prizeLayer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 26px; font-weight: 900; color: var(--brand-orange);
-            background: repeating-linear-gradient(45deg, #fff, #fff 10px, #fff8f0 10px, #fff8f0 20px);
+            background: #fff;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 1;
         }
+        .prize-emoji { font-size: 45px; margin-bottom: 5px; animation: bounce 2s infinite; }
+        .prize-text { font-size: 24px; font-weight: 800; color: var(--primary); }
 
-        canvas { position: relative; z-index: 20; cursor: crosshair; }
+        canvas { position: relative; z-index: 2; cursor: crosshair; }
 
-        /* WIN SCREEN */
-        #resultArea { display: none; transform: translateZ(60px); text-align: center; animation: popUp 0.5s ease; }
-        @keyframes popUp { from { transform: scale(0.8) translateZ(0); opacity: 0; } to { transform: scale(1) translateZ(60px); opacity: 1; } }
-
-        .coupon-code {
-            background: #333; color: #fff; 
-            padding: 15px; border-radius: 8px; 
+        /* Result Area */
+        #resultArea { display: none; animation: popIn 0.5s; }
+        .coupon-display {
+            background: #222; color: #fff;
+            padding: 15px; border-radius: 10px; margin: 15px 0;
             font-family: monospace; font-size: 22px; letter-spacing: 2px;
-            margin: 15px 0; border: 2px dashed #555;
+            border: 2px dashed #666;
         }
-        
-        .tac { font-size: 11px; color: #666; background: #eee; padding: 10px; border-radius: 8px; text-align: left; line-height: 1.5; }
-        .error-msg { color: #d32f2f; font-size: 12px; margin-top: 10px; display: none; background: #ffe6e6; padding: 5px; border-radius: 4px; }
+        .terms { font-size: 11px; color: #555; background: #FFF0E0; padding: 15px; border-radius: 12px; text-align: left; line-height: 1.6; border: 1px solid #FFDbb5; }
+        .error-msg { color: #d32f2f; font-size: 12px; margin-top: 10px; display: none; background: #ffebee; padding: 8px; border-radius: 8px; }
+
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
     </style>
 </head>
 <body>
 
-<i class="fas fa-carrot floating-icon" style="top: 10%; left: 10%;"></i>
-<i class="fas fa-apple-alt floating-icon" style="top: 20%; right: 15%; animation-delay: 1s;"></i>
-<i class="fas fa-shopping-cart floating-icon" style="bottom: 15%; left: 15%; animation-delay: 2s;"></i>
-<i class="fas fa-lemon floating-icon" style="bottom: 10%; right: 10%; animation-delay: 3s;"></i>
+<div class="particle p1"><i class="fas fa-carrot"></i></div>
+<div class="particle p2"><i class="fas fa-apple-alt"></i></div>
+<div class="particle p3"><i class="fas fa-pizza-slice"></i></div>
+<div class="particle p4"><i class="fas fa-shopping-basket"></i></div>
+
+<div class="container">
+    
+    <div class="brand-header">
+        <div class="logo-circle"><i class="fas fa-store"></i></div>
+        <h2>Best Price Guru<br>Instamart</h2>
+        <div class="badge">VINUKONDA</div>
+    </div>
+
+    <div id="loginForm">
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="Enter Name">
+        </div>
+        <div class="input-group">
+            <label>WhatsApp Number</label>
+            <input type="tel" id="whatsapp" placeholder="Ex: 9876543210" pattern="[0-9]*">
+        </div>
+        <div class="input-group">
+            <label>City</label>
+            <input type="text" id="city" placeholder="Ex: Vinukonda">
+        </div>
+
+        <button class="btn-orange" onclick="verifyUser()" id="playBtn">GET LUCKY CARD 🎲</button>
+        <div id="error" class="error-msg"></div>
+        <p style="font-size:10px; color:#fff; margin-top:20px; opacity: 0.8;">Limited to 1000 Coupons Only</p>
+    </div>
+
+    <div id="gameArea">
+        <h3 style="color:#333; margin:0;">Scratch Now!</h3>
+        <p style="font-size:12px; color:#888; margin-top:5px;">Find your hidden discount below</p>
+        
+        <div class="scratch-card-wrapper">
+            <div id="prizeLayer">
+                <div class="prize-emoji">🎁</div>
+                <div class="prize-text" id="hiddenPrize">...</div>
+            </div>
+            <canvas id="scratchCanvas" width="280" height="180"></canvas>
+        </div>
+    </div>
+
+    <div id="resultArea">
+        <i class="fas fa-check-circle" style="font-size:50px; color:#4CAF50; margin-bottom:10px;"></i>
+        <h2 style="color:#FC8019;">Congratulations!</h2>
+        <p style="font-size:13px; color:#555;">You've won an exclusive deal:</p>
+        
+        <div class="coupon-display" id="finalCode"></div>
+        
+        <div class="terms">
+            <b>Coupon Terms & Conditions:</b><br>
+            • Minimum purchase of ₹1000 is required.<br>
+            • Valid for one-time use only.<br>
+            • Not applicable on Oil, Rice, Ghee, and Atta.<br>
+            • Valid for 30 days from the date of issue.<br>
+            • Applicable on offline store purchases only.<br><br>
+            <b>Note:</b> The coupon will be sent automatically. Please show the coupon at the billing counter during checkout.
+        </div>
+        
+        <button class="btn-orange" onclick="location.reload()" style="background:#333; margin-top:15px;">CLOSE</button>
+    </div>
+
+</div>
 
 <audio id="scratchSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" loop></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 
-<div class="scene">
-    <div class="card-3d" id="tiltCard">
-        
-        <div class="header">
-            <div class="logo-box"><i class="fas fa-store"></i></div>
-            <h2>Best Price Guru</h2>
-            <div class="sub-badge">INSTAMART • VINUKONDA</div>
-        </div>
-
-        <div id="loginForm" class="input-group">
-            <input type="text" id="name" placeholder="👤 Customer Name">
-            <input type="tel" id="whatsapp" placeholder="📱 WhatsApp (e.g., 9876543210)" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" id="city" placeholder="📍 City / Village">
-            
-            <button class="btn-orange" onclick="verifyUser()" id="playBtn">TRY YOUR LUCK 🎲</button>
-            <div id="error" class="error-msg"></div>
-            <p style="font-size: 11px; color: #888; margin-top: 15px; text-align: center;">By clicking, you agree to T&C. Limit 1000 Coupons.</p>
-        </div>
-
-        <div id="gameArea">
-            <h3 style="color: #444; margin-bottom: 10px;">Scratch & Win!</h3>
-            <div class="scratch-box">
-                <div id="prizeUnder">
-                    <span style="font-size: 40px; margin-bottom: 10px;">🎁</span>
-                    <span id="prizeCode">...</span>
-                </div>
-                <canvas id="scratchCanvas" width="280" height="160"></canvas>
-            </div>
-            <p style="font-size: 11px; color: #aaa; margin-top: 10px;">🔊 Turn Volume Up!</p>
-        </div>
-
-        <div id="resultArea">
-            <h1 style="color: var(--brand-orange); margin: 0;">CONGRATS! 🎉</h1>
-            <p style="font-size: 13px; color: #555;">You won an exclusive coupon:</p>
-            
-            <div class="coupon-code" id="finalDisplay"></div>
-            
-            <div class="tac">
-                <b>⚠️ Terms & Conditions:</b><br>
-                • Minimum Bill Value: ₹1000<br>
-                • Valid for One-Time Use Only<br>
-                • Not valid on: Oil, Ghee, Rice, Atta<br>
-                • Show screenshot at billing counter
-            </div>
-            
-            <button class="btn-orange" onclick="location.reload()">CLOSE</button>
-        </div>
-
-    </div>
-</div>
-
 <script>
-    // 🔴 IMPORTANT: REPLACE THIS URL WITH YOUR NEW DEPLOYMENT URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw2tqaAq3X0go_HgGAte7ivtFfFzMKHh7jWCWgPjR_aqeDs72KMuFaWSVzbUiDU1NJYyw/exec';
+    // ✅ YOUR GOOGLE SCRIPT URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby2ImH9snoG6KFEqYgJrU5DPj2HNOhG68mLxwSTmOrWUW0ZEzNsr3UtDgjI8Ls3_jse/exec';
 
-    // --- 3D TILT EFFECT ---
-    const card = document.getElementById('tiltCard');
-    const scene = document.querySelector('.scene');
-
-    scene.addEventListener('mousemove', (e) => {
-        const xAxis = (window.innerWidth / 2 - e.pageX) / 20; 
-        const yAxis = (window.innerHeight / 2 - e.pageY) / 20;
-        card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-    });
-    
-    scene.addEventListener('mouseleave', () => {
-        card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-    });
-
-    // --- LOGIC ---
     let winningPrize = "";
 
     function verifyUser() {
-        const name = document.getElementById('name').value;
-        const whatsapp = document.getElementById('whatsapp').value;
-        const city = document.getElementById('city').value;
+        const name = document.getElementById('name').value.trim();
+        const whatsapp = document.getElementById('whatsapp').value.trim();
+        const city = document.getElementById('city').value.trim();
         const btn = document.getElementById('playBtn');
         const err = document.getElementById('error');
 
         if(!name || !whatsapp || !city) {
-            err.innerText = "Please fill all fields!"; err.style.display = 'block'; return;
+            err.innerText = "Please fill all details!"; err.style.display='block'; return;
         }
 
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CHECKING...';
         err.style.display = 'none';
 
-        // NOTE: We use simple POST. Google Apps Script must return JSON.
         fetch(scriptURL, {
             method: 'POST',
             body: JSON.stringify({ name, whatsapp, city })
@@ -237,8 +246,8 @@
                 btn.disabled = false;
             } else {
                 winningPrize = data.prize;
-                document.getElementById('prizeCode').innerText = winningPrize;
-                document.getElementById('finalDisplay').innerText = winningPrize;
+                document.getElementById('hiddenPrize').innerText = winningPrize;
+                document.getElementById('finalCode').innerText = winningPrize;
                 
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('gameArea').style.display = 'block';
@@ -246,12 +255,10 @@
             }
         })
         .catch(e => {
-            // Fallback for redirect issues - usually means it actually worked but browser blocked the redirect response
-            console.log("Fetch error (might be redirect):", e);
-            err.innerText = "Network Error. Please check: 1. Is your Script deployed as 'Anyone'? 2. Did you use the New Version?"; 
-            err.style.display = 'block'; 
-            btn.disabled = false; 
+            err.innerText = "Network Error. Refresh & Try Again.";
+            err.style.display = 'block';
             btn.innerHTML = 'TRY AGAIN';
+            btn.disabled = false;
         });
     }
 
@@ -260,31 +267,29 @@
         const ctx = canvas.getContext('2d');
         const sound = document.getElementById('scratchSound');
 
-        // Create Metallic Gradient for Scratch Surface
-        let grd = ctx.createLinearGradient(0, 0, 280, 160);
-        grd.addColorStop(0, "#C0C0C0");
-        grd.addColorStop(0.5, "#E0E0E0");
-        grd.addColorStop(1, "#A0A0A0");
+        // Create "Silver Foil" Gradient
+        let grd = ctx.createLinearGradient(0, 0, 280, 180);
+        grd.addColorStop(0, "#D3D3D3");
+        grd.addColorStop(0.5, "#F5F5F5");
+        grd.addColorStop(1, "#C0C0C0");
         ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, 280, 160);
+        ctx.fillRect(0, 0, 280, 180);
 
-        // Add "Swiggy" Orange Pattern on top
-        ctx.fillStyle = "rgba(252, 128, 25, 0.2)"; // Transparent Orange
-        for(let i=0; i<300; i+=20) {
-            ctx.beginPath();
-            ctx.arc(i, 80, 10, 0, 2*Math.PI);
-            ctx.fill();
+        // Add Orange Pattern to Foil
+        ctx.fillStyle = "rgba(252, 128, 25, 0.1)"; // Transparent Orange
+        for(let i=0; i<280; i+=20) {
+            for(let j=0; j<180; j+=20) {
+                if((i+j)%40 == 0) ctx.beginPath(), ctx.arc(i, j, 5, 0, Math.PI*2), ctx.fill();
+            }
         }
 
         // Text
-        ctx.font = "bold 20px Segoe UI";
-        ctx.fillStyle = "#555";
+        ctx.fillStyle = "#666";
+        ctx.font = "bold 20px Poppins";
         ctx.textAlign = "center";
-        ctx.fillText("SCRATCH HERE", 140, 85);
+        ctx.fillText("SCRATCH HERE", 140, 95);
 
-        let isDrawing = false;
-        let points = 0;
-
+        let isDrawing = false, points = 0;
         const start = () => { isDrawing = true; sound.play().catch(()=>{}); };
         const end = () => { isDrawing = false; sound.pause(); };
         
@@ -292,49 +297,37 @@
             if(!isDrawing) return;
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
-            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+            let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            let y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
 
             ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.arc(x, y, 20, 0, Math.PI * 2);
-            ctx.fill();
-
-            if(navigator.vibrate) navigator.vibrate(10); // Haptic
-
+            ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI*2); ctx.fill();
+            
+            if(navigator.vibrate) navigator.vibrate(5);
             points++;
-            if(points > 120) finishGame();
+            if(points > 100) finishGame();
         }
 
-        canvas.addEventListener('mousedown', start);
-        canvas.addEventListener('touchstart', start);
-        window.addEventListener('mousemove', move);
-        canvas.addEventListener('touchmove', move);
-        window.addEventListener('mouseup', end);
-        window.addEventListener('touchend', end);
+        canvas.addEventListener('mousedown', start); canvas.addEventListener('touchstart', start);
+        window.addEventListener('mousemove', move); canvas.addEventListener('touchmove', move);
+        window.addEventListener('mouseup', end); window.addEventListener('touchend', end);
     }
 
-    let done = false;
+    let isDone = false;
     function finishGame() {
-        if(done) return;
-        done = true;
-        
+        if(isDone) return;
+        isDone = true;
         setTimeout(() => {
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('resultArea').style.display = 'block';
             document.getElementById('winSound').play();
-            
-            // Orange & Green Confetti
             confetti({
                 particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#FC8019', '#333333', '#ffffff'] 
+                spread: 90,
+                colors: ['#FC8019', '#ffffff', '#000000'] // Orange, White, Black confetti
             });
         }, 600);
     }
 </script>
-
 </body>
 </html>
-
