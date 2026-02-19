@@ -328,8 +328,7 @@
             document.getElementById('winSound').play();
             confetti({ particleCount: 150, spread: 90, colors: ['#FC8019', '#ffffff', '#000000'] });
             
-            // Trigger Automatic Download after 1.5 seconds 
-            setTimeout(downloadCoupon, 1500);
+            // Note: The automatic download trigger was removed from here.
 
         }, 600);
     }
@@ -349,7 +348,7 @@
             backgroundColor: '#ffffff', 
             borderRadius: 24 
         }).then(canvas => {
-            // Initiate the download
+            // Initiate the download based on their specific winning prize
             const link = document.createElement('a');
             link.download = `Instamart_Coupon_${winningPrize}.png`;
             link.href = canvas.toDataURL('image/png');
