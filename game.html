@@ -12,7 +12,7 @@
         :root {
             --bg-gradient: linear-gradient(135deg, #FC8019 0%, #FF5200 100%);
             --primary: #FC8019;
-            --success: #2e7d32; /* Money Green */
+            --success: #2e7d32;
             --card-white: #ffffff;
             --text-dark: #202124;
         }
@@ -113,11 +113,10 @@
             border: 2px dashed #666;
         }
 
-        /* NEW: The Discount Highlight Box */
         .discount-highlight {
             background: #e8f5e9; color: var(--success);
             padding: 10px; border-radius: 8px; margin-bottom: 15px;
-            font-size: 14px; font-weight: 800; text-transform: uppercase;
+            font-size: 13px; font-weight: 800; text-transform: uppercase;
             border: 1px solid #c8e6c9;
             animation: pulse 2s infinite;
         }
@@ -154,11 +153,11 @@
         </div>
         <div class="input-group">
             <label>WhatsApp Number</label>
-            <input type="tel" id="whatsapp" placeholder="Ex: 9876543210" pattern="[0-9]*">
+            <input type="tel" id="whatsapp" placeholder="Ex: 9876543210" pattern="[0-9]*" maxlength="10">
         </div>
         <div class="input-group">
             <label>City</label>
-            <input type="text" id="city" placeholder="Ex: Vinukonda">
+            <input type="text" id="city" placeholder="City">
         </div>
 
         <button class="btn-orange" onclick="verifyUser()" id="playBtn">GET LUCKY CARD 🎲</button>
@@ -184,11 +183,10 @@
         <h2 style="color:#FC8019; margin-bottom:5px;">Congratulations!</h2>
         
         <div class="coupon-display" id="finalCode"></div>
-        
         <div class="discount-highlight" id="prizeDesc"></div>
         
         <div class="terms">
-            <b>Terms & Conditions:</b><br>
+            <b>Coupon Terms & Conditions:</b><br>
             • Min purchase ₹1000 required.<br>
             • Valid for one-time use only.<br>
             • Not applicable on Oil, Rice, Ghee, Atta.<br>
@@ -218,8 +216,35 @@
         const btn = document.getElementById('playBtn');
         const err = document.getElementById('error');
 
-        if(!name || !whatsapp || !city) {
-            err.innerText = "Please fill all details!"; err.style.display='block'; return;
+        // --- 1. SEPARATE ERROR CHECKS ---
+        
+        // CHECK NAME
+        if(!name) {
+            err.innerText = "Pls Fill Customer Name is Mandatory"; 
+            err.style.display='block'; 
+            return;
+        }
+
+        // CHECK MOBILE
+        if(!whatsapp) {
+            err.innerText = "Please Enter Mobile Number"; 
+            err.style.display='block'; 
+            return;
+        }
+        
+        // CHECK MOBILE PATTERN (10 Digits)
+        const phonePattern = /^[0-9]{10}$/;
+        if(!phonePattern.test(whatsapp)) {
+             err.innerText = "❌ Phone number must be exactly 10 digits!"; 
+             err.style.display='block'; 
+             return;
+        }
+
+        // CHECK CITY
+        if(!city) {
+            err.innerText = "Please Enter City"; 
+            err.style.display='block'; 
+            return;
         }
 
         btn.disabled = true;
@@ -240,18 +265,17 @@
             } else {
                 winningPrize = data.prize;
                 
-                // --- UPDATE PRIZE TEXT & DESCRIPTION ---
                 document.getElementById('hiddenPrize').innerText = winningPrize;
                 document.getElementById('finalCode').innerText = winningPrize;
                 
-                // Logic to set the Description Text
-                let descText = "💰 INSTANT DISCOUNT APPLIED";
-                if(winningPrize.includes("10%")) descText = "💰 INSTANT 10% CASH DISCOUNT";
-                else if(winningPrize.includes("8%")) descText = "💰 INSTANT 8% CASH DISCOUNT";
-                else if(winningPrize.includes("6%")) descText = "💰 INSTANT 6% CASH DISCOUNT";
+                // --- NEW DISCOUNT TEXT LOGIC ---
+                let percent = "10%";
+                if(winningPrize.includes("8%")) percent = "8%";
+                else if(winningPrize.includes("6%")) percent = "6%";
+                
+                let descText = `use this code to get 💰 INSTANT ${percent} CASH DISCOUNT on your bill`;
                 
                 document.getElementById('prizeDesc').innerText = descText;
-                // ---------------------------------------
 
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('gameArea').style.display = 'block';
