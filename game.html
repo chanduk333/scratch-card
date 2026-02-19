@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Best Price Guru Instamart</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -121,7 +124,7 @@
             animation: pulse 2s infinite;
         }
 
-        .terms { font-size: 11px; color: #555; background: #FFF0E0; padding: 12px; border-radius: 10px; text-align: left; line-height: 1.6; border: 1px solid #FFDbb5; }
+        .terms { font-size: 11px; color: #555; background: #FFF0E0; padding: 12px; border-radius: 10px; text-align: left; line-height: 1.6; border: 1px solid #FFDbb5; margin-bottom: 15px;}
         .error-msg { color: #d32f2f; font-size: 12px; margin-top: 10px; display: none; background: #ffebee; padding: 8px; border-radius: 8px; }
 
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -138,7 +141,7 @@
 <div class="particle p3"><i class="fas fa-pizza-slice"></i></div>
 <div class="particle p4"><i class="fas fa-shopping-basket"></i></div>
 
-<div class="container">
+<div class="container" id="captureArea">
     
     <div class="brand-header">
         <div class="logo-circle"><i class="fas fa-store"></i></div>
@@ -160,7 +163,7 @@
             <input type="text" id="city" placeholder="City">
         </div>
 
-        <button class="btn-orange" onclick="verifyUser()" id="playBtn">GET LUCKY CARD 🎲</button>
+        <button class="btn-orange action-btn" onclick="verifyUser()" id="playBtn">GET LUCKY CARD 🎲</button>
         <div id="error" class="error-msg"></div>
         <p style="font-size:10px; color:#fff; margin-top:15px; opacity: 0.9;">Limited to 1000 Coupons Only</p>
     </div>
@@ -195,7 +198,10 @@
             <b>Note:</b> Please show this coupon at the billing counter.
         </div>
         
-        <button class="btn-orange" onclick="location.reload()" style="background:#333; margin-top:15px;">CLOSE</button>
+        <button class="btn-orange action-btn" onclick="downloadCoupon()" style="background:#4CAF50; margin-bottom: 10px;">
+            <i class="fas fa-download"></i> SAVE IMAGE
+        </button>
+        <button class="btn-orange action-btn" onclick="location.reload()" style="background:#333; margin-top:0;">CLOSE</button>
     </div>
 
 </div>
@@ -204,9 +210,7 @@
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 
 <script>
-    // ✅ YOUR GOOGLE SCRIPT URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycby2ImH9snoG6KFEqYgJrU5DPj2HNOhG68mLxwSTmOrWUW0ZEzNsr3UtDgjI8Ls3_jse/exec';
-
     let winningPrize = "";
 
     function verifyUser() {
@@ -215,37 +219,13 @@
         const city = document.getElementById('city').value.trim();
         const btn = document.getElementById('playBtn');
         const err = document.getElementById('error');
-
-        // --- 1. SEPARATE ERROR CHECKS ---
         
-        // CHECK NAME
-        if(!name) {
-            err.innerText = "Pls Fill Customer Name is Mandatory"; 
-            err.style.display='block'; 
-            return;
-        }
-
-        // CHECK MOBILE
-        if(!whatsapp) {
-            err.innerText = "Please Enter Mobile Number"; 
-            err.style.display='block'; 
-            return;
-        }
+        if(!name) { err.innerText = "Pls Fill Customer Name is Mandatory"; err.style.display='block'; return; }
+        if(!whatsapp) { err.innerText = "Please Enter Mobile Number"; err.style.display='block'; return; }
         
-        // CHECK MOBILE PATTERN (10 Digits)
         const phonePattern = /^[0-9]{10}$/;
-        if(!phonePattern.test(whatsapp)) {
-             err.innerText = "❌ Phone number must be exactly 10 digits!"; 
-             err.style.display='block'; 
-             return;
-        }
-
-        // CHECK CITY
-        if(!city) {
-            err.innerText = "Please Enter City"; 
-            err.style.display='block'; 
-            return;
-        }
+        if(!phonePattern.test(whatsapp)) { err.innerText = "❌ Phone number must be exactly 10 digits!"; err.style.display='block'; return; }
+        if(!city) { err.innerText = "Please Enter City"; err.style.display='block'; return; }
 
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CHECKING...';
@@ -268,13 +248,11 @@
                 document.getElementById('hiddenPrize').innerText = winningPrize;
                 document.getElementById('finalCode').innerText = winningPrize;
                 
-                // --- NEW DISCOUNT TEXT LOGIC ---
                 let percent = "10%";
                 if(winningPrize.includes("8%")) percent = "8%";
                 else if(winningPrize.includes("6%")) percent = "6%";
                 
                 let descText = `use this code to get 💰 INSTANT ${percent} CASH DISCOUNT on your bill`;
-                
                 document.getElementById('prizeDesc').innerText = descText;
 
                 document.getElementById('loginForm').style.display = 'none';
@@ -339,8 +317,38 @@
             document.getElementById('resultArea').style.display = 'block';
             document.getElementById('winSound').play();
             confetti({ particleCount: 150, spread: 90, colors: ['#FC8019', '#ffffff', '#000000'] });
+            
+            // Trigger Automatic Download after 1.5 seconds so UI can finish loading
+            setTimeout(downloadCoupon, 1500);
+
         }, 600);
     }
+
+    // --- NEW: Download Image Function ---
+    function downloadCoupon() {
+        const captureArea = document.getElementById('captureArea');
+        const buttons = document.querySelectorAll('.action-btn');
+
+        // Temporarily hide buttons so they don't appear in the downloaded image
+        buttons.forEach(btn => btn.style.display = 'none');
+
+        // Create the screenshot
+        html2canvas(captureArea, { 
+            scale: 2, // High resolution
+            backgroundColor: '#ffffff', // Clean white background
+            borderRadius: 24 
+        }).then(canvas => {
+            // Create a fake link to trigger the download
+            const link = document.createElement('a');
+            link.download = `Instamart_Coupon_${winningPrize}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            // Put the buttons back on the screen
+            buttons.forEach(btn => btn.style.display = 'block');
+        });
+    }
+
 </script>
 </body>
 </html>
