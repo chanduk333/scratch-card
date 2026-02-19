@@ -82,7 +82,7 @@
             width: 100%; padding: 16px;
             background: linear-gradient(135deg, #FC8019, #FF5200);
             color: white; border: none; border-radius: 12px;
-            font-size: 16px; font-weight: 700; text-transform: uppercase;
+            font-size: 15px; font-weight: 700; text-transform: uppercase;
             cursor: pointer; margin-top: 15px;
             box-shadow: 0 8px 20px rgba(252, 128, 25, 0.3);
             transition: transform 0.1s;
@@ -125,6 +125,13 @@
         }
 
         .terms { font-size: 11px; color: #555; background: #FFF0E0; padding: 12px; border-radius: 10px; text-align: left; line-height: 1.6; border: 1px solid #FFDbb5; margin-bottom: 15px;}
+        
+        .billing-instruction {
+            background: #e3f2fd; color: #1565c0; border: 1px dashed #2196f3;
+            padding: 10px; border-radius: 8px; margin-bottom: 15px;
+            font-size: 12px; font-weight: bold;
+        }
+
         .error-msg { color: #d32f2f; font-size: 12px; margin-top: 10px; display: none; background: #ffebee; padding: 8px; border-radius: 8px; }
 
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -194,12 +201,15 @@
             • Valid for one-time use only.<br>
             • Not applicable on Oil, Rice, Ghee, Atta.<br>
             • Valid for 30 days from issue.<br>
-            • Offline store purchases only.<br><br>
-            <b>Note:</b> Please show this coupon at the billing counter.
+            • Offline store purchases only.
+        </div>
+
+        <div class="billing-instruction" id="billingPrompt">
+            ⚠️ Please download this coupon and show it at the billing counter to claim your discount!
         </div>
         
         <button class="btn-orange action-btn" onclick="downloadCoupon()" style="background:#4CAF50; margin-bottom: 10px;">
-            <i class="fas fa-download"></i> SAVE IMAGE
+            <i class="fas fa-download"></i> DOWNLOAD TO SHOW AT BILLING
         </button>
         <button class="btn-orange action-btn" onclick="location.reload()" style="background:#333; margin-top:0;">CLOSE</button>
     </div>
@@ -318,34 +328,36 @@
             document.getElementById('winSound').play();
             confetti({ particleCount: 150, spread: 90, colors: ['#FC8019', '#ffffff', '#000000'] });
             
-            // Trigger Automatic Download after 1.5 seconds so UI can finish loading
+            // Trigger Automatic Download after 1.5 seconds 
             setTimeout(downloadCoupon, 1500);
 
         }, 600);
     }
 
-    // --- NEW: Download Image Function ---
     function downloadCoupon() {
         const captureArea = document.getElementById('captureArea');
         const buttons = document.querySelectorAll('.action-btn');
+        const promptBox = document.getElementById('billingPrompt');
 
-        // Temporarily hide buttons so they don't appear in the downloaded image
+        // Hide buttons & the prompt text so they aren't included in the downloaded photo
         buttons.forEach(btn => btn.style.display = 'none');
+        promptBox.style.display = 'none';
 
-        // Create the screenshot
+        // Capture high quality image of the digital coupon
         html2canvas(captureArea, { 
-            scale: 2, // High resolution
-            backgroundColor: '#ffffff', // Clean white background
+            scale: 2, 
+            backgroundColor: '#ffffff', 
             borderRadius: 24 
         }).then(canvas => {
-            // Create a fake link to trigger the download
+            // Initiate the download
             const link = document.createElement('a');
             link.download = `Instamart_Coupon_${winningPrize}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
             
-            // Put the buttons back on the screen
+            // Bring the buttons & prompt text back to the screen
             buttons.forEach(btn => btn.style.display = 'block');
+            promptBox.style.display = 'block';
         });
     }
 
